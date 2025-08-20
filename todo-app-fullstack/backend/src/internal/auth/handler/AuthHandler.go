@@ -1,0 +1,50 @@
+package handler
+
+import (
+	"net/http"
+
+	"github.com/Zyprush18/deeepen-golang/todo-app-fullstack/backend/src/helper"
+	"github.com/Zyprush18/deeepen-golang/todo-app-fullstack/backend/src/internal/auth/service"
+	"github.com/Zyprush18/deeepen-golang/todo-app-fullstack/backend/src/model/request"
+	"github.com/gin-gonic/gin"
+)
+
+type HandlerAuth struct {
+	svc service.AuthService
+}
+
+func NewHandlerAuth(s service.AuthService) HandlerAuth  {
+	return HandlerAuth{svc: s}
+}
+
+func (h *HandlerAuth) Register(c *gin.Context)  {
+	req := new(request.Register)
+
+	if c.ShouldBindJSON(req) != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Body Request Is Missing",
+		})
+		return
+	}
+
+
+	if err:= h.svc.Register(req);err != nil {
+		if helper.Duplicate(err) {
+			c.JSON(http.StatusConflict, gin.H{
+				"message":"email already exists",
+			})
+			return
+		}
+
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message":"Something Went Wrong",
+		})
+		return
+	}
+
+
+	c.JSON(http.StatusCreated, gin.H{
+		"message":"Success Register",
+	})
+
+}
