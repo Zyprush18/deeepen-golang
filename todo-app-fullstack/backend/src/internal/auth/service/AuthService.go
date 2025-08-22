@@ -26,7 +26,7 @@ func (r *takeAuthRepo) Register(req *request.Register) error  {
 		Username: req.Username,
 		Email: req.Email,
 		Password: helper.HashingPass(req.Password),
-		Model: helper.Model{
+		Model: request.Model{
 			CreatedAt: now,
 		},
 	}

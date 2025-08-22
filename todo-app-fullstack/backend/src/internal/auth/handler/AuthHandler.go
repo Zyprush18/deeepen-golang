@@ -9,20 +9,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type HandlerAuth struct {
+type handlerAuth struct {
 	svc service.AuthService
 }
 
-func NewHandlerAuth(s service.AuthService) HandlerAuth  {
-	return HandlerAuth{svc: s}
+func NewHandlerAuth(s service.AuthService) handlerAuth  {
+	return handlerAuth{svc: s}
 }
 
-func (h *HandlerAuth) Register(c *gin.Context)  {
+func (h *handlerAuth) Register(c *gin.Context)  {
 	req := new(request.Register)
 
-	if c.ShouldBindJSON(req) != nil {
+	if err:= c.ShouldBindJSON(req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Body Request Is Missing",
+			"message": "Failed Request",
+			"error": err.Error(),
 		})
 		return
 	}
