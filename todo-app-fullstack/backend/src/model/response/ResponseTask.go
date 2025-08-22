@@ -10,6 +10,7 @@ type Task struct {
 	SubTitle string `json:"sub_title"`
 	Description string `json:"decription"`
 	UserId uint `json:"user_id"`
+	ListTasks []ListTask
 	Model
 }
 

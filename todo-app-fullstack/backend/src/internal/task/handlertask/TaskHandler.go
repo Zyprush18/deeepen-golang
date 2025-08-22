@@ -58,18 +58,11 @@ func (h *HandlerTask) Store(c *gin.Context)  {
 }
 
 func (h *HandlerTask) Show(c *gin.Context)  {
-	getid,ok := c.Params.Get("id")
-	if !ok {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message":"Params Is MIssing",
-		})
-		return
-	}
-
-	id,err := strconv.Atoi(getid)
+	getid := c.Param("id")
+	id, err := strconv.Atoi(getid)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message":"Invalid Parameter",
+			"message": "invalid type param",
 		})
 		return
 	}
@@ -96,18 +89,11 @@ func (h *HandlerTask) Show(c *gin.Context)  {
 }
 
 func (h *HandlerTask) Update(c *gin.Context)  {
-	getid,ok := c.Params.Get("id")
-	if !ok {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message":"Params Is MIssing",
-		})
-		return
-	}
-
-	id,err := strconv.Atoi(getid)
+	getid := c.Param("id")
+	id, err := strconv.Atoi(getid)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message":"Invalid Parameter",
+			"message": "invalid type param",
 		})
 		return
 	}
@@ -141,18 +127,11 @@ func (h *HandlerTask) Update(c *gin.Context)  {
 }
 
 func (h *HandlerTask) Delete(c *gin.Context)  {
-	getid,ok := c.Params.Get("id")
-	if !ok {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message":"Params Is MIssing",
-		})
-		return
-	}
-
-	id,err := strconv.Atoi(getid)
+	getid := c.Param("id")
+	id, err := strconv.Atoi(getid)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message":"Invalid Parameter",
+			"message": "invalid type param",
 		})
 		return
 	}

@@ -41,12 +41,23 @@ func (d *database) Store(req *request.Task) error {
 }
 
 func (d *database) Show(id,userid int) (*response.Task, error) {
-	var modeltask response.Task
-	if err := d.db.Table("tasks").Where("id = ? AND user_id = ?", id, userid).First(&modeltask).Error;err != nil {
+	var modeltask entity.Task
+	if err := d.db.Model(&entity.Task{}).Preload("ListTasks").Where("id = ? AND user_id = ?", id, userid).First(&modeltask).Error;err != nil {
 		return nil, err
 	}
 
-	return &modeltask,nil
+	return &response.Task{
+		Id: modeltask.Id,
+		Title: modeltask.Title,
+		SubTitle: modeltask.SubTitle,
+		Description: modeltask.Description,
+		UserId: modeltask.UserId,
+		ListTasks: response.ParseAllLIstTask(modeltask.ListTasks),
+		Model: response.Model{
+			CreatedAt: modeltask.CreatedAt,
+			UpdatedAt: modeltask.UpdatedAt,
+		},
+	},nil
 }
 
 
