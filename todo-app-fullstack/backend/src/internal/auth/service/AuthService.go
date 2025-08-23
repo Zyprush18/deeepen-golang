@@ -10,14 +10,16 @@ import (
 
 type AuthService interface {
 	Register(req *request.Register) error
+	Login(req *request.Login) (string, error)
 }
 
 type takeAuthRepo struct {
 	repo repository.AuthRepo
+	jwtKey string
 }
 
-func NewServiceAuth(r repository.AuthRepo) AuthService  {
-	return &takeAuthRepo{repo: r}
+func NewServiceAuth(r repository.AuthRepo, jkwy string) AuthService  {
+	return &takeAuthRepo{repo: r,jwtKey: jkwy}
 }
 
 func (r *takeAuthRepo) Register(req *request.Register) error  {
@@ -32,4 +34,15 @@ func (r *takeAuthRepo) Register(req *request.Register) error  {
 	}
 
 	return r.repo.Register(requser)
+}
+
+func (r *takeAuthRepo) Login(req *request.Login) (string, error)  {
+	resp, err:= r.repo.Login(req.Email)
+	if err != nil {
+		return "", err
+	}
+
+	token := helper.GenerateToken(resp, r.jwtKey)
+
+	return token,nil
 }

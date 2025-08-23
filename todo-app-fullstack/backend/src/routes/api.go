@@ -11,20 +11,24 @@ import (
 	"github.com/Zyprush18/deeepen-golang/todo-app-fullstack/backend/src/internal/task/handlertask"
 	"github.com/Zyprush18/deeepen-golang/todo-app-fullstack/backend/src/internal/task/repositorytask"
 	"github.com/Zyprush18/deeepen-golang/todo-app-fullstack/backend/src/internal/task/servicetask"
+	"github.com/Zyprush18/deeepen-golang/todo-app-fullstack/backend/src/middleware"
 	"github.com/gin-gonic/gin"
 )
 
 func NewRoute(r *gin.Engine)  {
-	initdb:= config.Config()
+	initdb, jwtkey:= config.Config()
 
+	// setup middleware
+	m := middleware.NewMiddleware(jwtkey)
 	api := r.Group("/api/v1")
 
 	// auth
 	authrepo := repository.NewConnection(initdb)
-	authservice := service.NewServiceAuth(&authrepo)
+	authservice := service.NewServiceAuth(&authrepo,jwtkey)
 	authhandler := handler.NewHandlerAuth(authservice)
 
 	api.POST("/register", authhandler.Register)
+	api.POST("/login", authhandler.Login)
 
 	
 	// task
@@ -32,6 +36,7 @@ func NewRoute(r *gin.Engine)  {
 	taskservice := servicetask.NewService(&taskrepo)
 	taskhandler := handlertask.NewHandler(taskservice)
 
+	api.Use(m.AuthMiddleware())
 	api.GET("/task", taskhandler.Index)
 	api.POST("/task/add", taskhandler.Store)
 	api.GET("/task/:id", taskhandler.Show)

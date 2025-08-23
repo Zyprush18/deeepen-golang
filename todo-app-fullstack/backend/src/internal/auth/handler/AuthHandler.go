@@ -1,12 +1,14 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/Zyprush18/deeepen-golang/todo-app-fullstack/backend/src/helper"
 	"github.com/Zyprush18/deeepen-golang/todo-app-fullstack/backend/src/internal/auth/service"
 	"github.com/Zyprush18/deeepen-golang/todo-app-fullstack/backend/src/model/request"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type handlerAuth struct {
@@ -48,4 +50,35 @@ func (h *handlerAuth) Register(c *gin.Context)  {
 		"message":"Success Register",
 	})
 
+}
+
+func (h *handlerAuth) Login(c *gin.Context)  {
+	req := new(request.Login)
+	if err:= c.ShouldBindJSON(req);err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Failed Request",
+			"error": err.Error(),
+		})
+		return
+	}
+
+	token, err := h.svc.Login(req)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"message":"Invalid Credential",
+			})
+			return
+		}
+
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message":"Something Went Wrong",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message":"Success",
+		"token": token,
+	})
 }

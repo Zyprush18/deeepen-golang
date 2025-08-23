@@ -20,7 +20,8 @@ func NewHandler(s servicetask.TaskSevice) HandlerTask  {
 }
 
 func (h *HandlerTask) Index(c *gin.Context)  {
-	resp,err := h.svc.GatAll(1)
+	userid := c.MustGet("user_id").(int)
+	resp,err := h.svc.GatAll(userid)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message":"Something Went Wrong",
@@ -35,6 +36,8 @@ func (h *HandlerTask) Index(c *gin.Context)  {
 }
 
 func (h *HandlerTask) Store(c *gin.Context)  {
+	userid := c.MustGet("user_id").(int)
+
 	req := new(request.Task)
 
 	if err:=c.ShouldBindJSON(req);err != nil {
@@ -45,7 +48,7 @@ func (h *HandlerTask) Store(c *gin.Context)  {
 		return
 	}
 
-	if err:= h.svc.Create(req, 2);err != nil {
+	if err:= h.svc.Create(req, userid);err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message":"Something Went Wrong",
 		})
@@ -58,6 +61,8 @@ func (h *HandlerTask) Store(c *gin.Context)  {
 }
 
 func (h *HandlerTask) Show(c *gin.Context)  {
+	userid := c.MustGet("user_id").(int)
+
 	getid := c.Param("id")
 	id, err := strconv.Atoi(getid)
 	if err != nil {
@@ -67,7 +72,7 @@ func (h *HandlerTask) Show(c *gin.Context)  {
 		return
 	}
 
-	resp, err := h.svc.Show(id, 1)
+	resp, err := h.svc.Show(id, userid)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{
@@ -89,6 +94,8 @@ func (h *HandlerTask) Show(c *gin.Context)  {
 }
 
 func (h *HandlerTask) Update(c *gin.Context)  {
+	userid := c.MustGet("user_id").(int)
+
 	getid := c.Param("id")
 	id, err := strconv.Atoi(getid)
 	if err != nil {
@@ -107,7 +114,7 @@ func (h *HandlerTask) Update(c *gin.Context)  {
 		return
 	}
 
-	if err:= h.svc.Update(id, 1, req) ;err != nil {
+	if err:= h.svc.Update(id, userid, req) ;err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{
 				"message":"Not Found Data",
@@ -127,6 +134,8 @@ func (h *HandlerTask) Update(c *gin.Context)  {
 }
 
 func (h *HandlerTask) Delete(c *gin.Context)  {
+	userid := c.MustGet("user_id").(int)
+
 	getid := c.Param("id")
 	id, err := strconv.Atoi(getid)
 	if err != nil {
@@ -136,7 +145,7 @@ func (h *HandlerTask) Delete(c *gin.Context)  {
 		return
 	}
 
-	if err:= h.svc.Delete(id,1);err != nil {
+	if err:= h.svc.Delete(id,userid);err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{
 				"message":"Not Found Data",

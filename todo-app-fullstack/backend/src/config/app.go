@@ -9,7 +9,7 @@ import (
 	// "gorm.io/gorm"
 )
 
-func Config() *gorm.DB  {
+func Config() (*gorm.DB, string)  {
 	e := newEnv()
 	DB,err := migration.NewConnection(e.DBName,e.DBHost,e.DBPort,e.DBUser,e.DBPass)
 	if err != nil {
@@ -17,5 +17,5 @@ func Config() *gorm.DB  {
 		log.Fatalln(err.Error())
 	}
 
-	return DB
+	return DB,e.JwtKey
 }

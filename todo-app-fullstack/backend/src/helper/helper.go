@@ -11,8 +11,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func HashingPass(pass string) string  {
-	hashpass,err := bcrypt.GenerateFromPassword([]byte(pass), 12)
+func HashingPass(pass string) string {
+	hashpass, err := bcrypt.GenerateFromPassword([]byte(pass), 12)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
@@ -25,34 +25,45 @@ func Duplicate(errs error) bool {
 		Code: "23505",
 	}
 
-	return errs == &err 
+	return errs == &err
 }
-
 
 type customClaims struct {
 	userid int
 	jwt.RegisteredClaims
 }
 
-func GenerateToken(user response.User,jwtkey string) string {
+func GenerateToken(user *response.User, jwtkey string) string {
 	claim := &customClaims{
 		userid: int(user.Id),
 		RegisteredClaims: jwt.RegisteredClaims{
-			ID: fmt.Sprintf("%d",user.Id),
-			Subject: user.Email,
-			Issuer: "backend",
+			ID:        fmt.Sprintf("%d", user.Id),
+			Subject:   user.Email,
+			Issuer:    "backend",
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),
 		},
 	}
 
-
-	generate := jwt.NewWithClaims(jwt.SigningMethodHS256,claim)
-	token,err := generate.SignedString([]byte(jwtkey))
+	generate := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
+	token, err := generate.SignedString([]byte(jwtkey))
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
 
 	return token
+}
+
+func ParseTokenJwt(tokenjwt, jwtkey string) (*customClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenjwt, &customClaims{}, func(token *jwt.Token) (any, error) {
+		return []byte(jwtkey), nil
+	})
+
+	claim,ok := token.Claims.(*customClaims)
+	if err != nil || !ok{
+		return nil, err
+	}
+
+	return claim,nil
 }
