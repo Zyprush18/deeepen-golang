@@ -8,7 +8,14 @@ import (
 )
 
 
+func AllowWs(c *fiber.Ctx) error  {
+	// upgrade to connection websocket
+	if websocket.IsWebSocketUpgrade(c) {
+		return c.Next()
+	}
 
+	return fiber.ErrUpgradeRequired
+}
 
 func main() {
 	app := fiber.New()
@@ -17,10 +24,7 @@ func main() {
 
 	// use the websocket
 	app.Use("/ws", AllowWs)
-	app.Use("/ws/chat", websocket.New(BidMessage(h)))
-
-
-
+	app.Get("/ws/chat", websocket.New(BidMessage(h)))
 
 	log.Fatal(app.Listen(":3000"))
 }

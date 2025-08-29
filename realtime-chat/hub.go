@@ -1,6 +1,9 @@
 package main
 
-import "github.com/gofiber/contrib/websocket"
+import (
+
+	"github.com/gofiber/contrib/websocket"
+)
 
 // struct for response
 type Message struct {
@@ -37,7 +40,7 @@ func (h *Hub) RunHub()  {
 			delete(h.clients, conn)
 		case msg:=  <- h.broadcast:
 			for  client := range h.clients {
-				_ = client.WriteJSON(msg)
+				client.WriteJSON(msg)
 			}
 		}
 	}
