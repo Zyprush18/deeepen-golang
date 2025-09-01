@@ -2,6 +2,8 @@ package response
 
 
 type MessageResponse struct {
-	Name string
-	Message string
+	From string `json:"from"`
+	Type string `json:"type"`
+	To string `json:"to"`
+	Message string `json:"message"`
 }

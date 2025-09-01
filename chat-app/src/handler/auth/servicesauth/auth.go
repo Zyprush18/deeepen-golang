@@ -1,6 +1,7 @@
 package servicesauth
 
 import (
+	"crypto/rand"
 	"errors"
 
 	"github.com/Zyprush18/deeepen-golang/chat-app/src/handler/auth/repositoryauth"
@@ -23,6 +24,7 @@ func NewService(r repositoryauth.AuthRepo) AuthService {
 
 func (r *takeAuthRepo) Register(req *request.Register) error {
 	req.Password = helper.HashPass(req.Password)
+	req.Uuid = rand.Text()
 	return r.repo.Register(req)
 }
 

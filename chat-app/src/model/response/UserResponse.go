@@ -7,4 +7,5 @@ type Auth struct {
 	Username string `json:"username"`
 	Email string	`json:"email"`
 	Password string	`json:"password"`
+	Uuid string	`json:"uuid"`
 }
