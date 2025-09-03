@@ -1,8 +1,8 @@
 package repositoryauth
 
 import (
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/model/request"
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/model/response"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/model/request"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/model/response"
 
 	"gorm.io/gorm"
 )

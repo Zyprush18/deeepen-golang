@@ -4,9 +4,9 @@ import (
 	"crypto/rand"
 	"errors"
 
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/handler/auth/repositoryauth"
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/helper"
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/model/request"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/auth/repositoryauth"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/helper"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/model/request"
 )
 
 type AuthService interface {

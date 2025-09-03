@@ -1,4 +1,4 @@
-module github.com/Zyprush18/deeepen-golang/chat-app
+module github.com/Zyprush18/deeepen-golang/chat-app/backend
 
 go 1.24.2
 

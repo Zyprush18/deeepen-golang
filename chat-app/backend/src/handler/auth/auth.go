@@ -5,9 +5,9 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/handler/auth/servicesauth"
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/helper"
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/model/request"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/auth/servicesauth"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/helper"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/model/request"
 
 	"gorm.io/gorm"
 )

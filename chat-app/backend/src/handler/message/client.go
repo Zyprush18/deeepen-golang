@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/helper"
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/model/response"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/helper"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/model/response"
 
 	"github.com/gorilla/websocket"
 )
@@ -29,7 +29,7 @@ type Client struct {
 	send chan *response.MessageResponse
 }
 
-func (c *Client) readMessage(fromuser,touser string) {
+func (c *Client) readMessage(fromuser, touser string) {
 	defer func() {
 		c.hub.RemoveClient <- c
 		c.conn.Close()
@@ -55,7 +55,7 @@ func (c *Client) readMessage(fromuser,touser string) {
 			break
 		}
 
-		c.hub.Broadcast <- &response.MessageResponse{From: fromuser,To: touser, Type: typeChat, Message: string(msg)}
+		c.hub.Broadcast <- &response.MessageResponse{From: fromuser, To: touser, Type: typeChat, Message: string(msg)}
 	}
 }
 
@@ -101,10 +101,9 @@ func ServeWs(h *Hub, w http.ResponseWriter, r *http.Request) {
 	userid := r.Context().Value(helper.UserId).(string)
 	toUser := r.Context().Value(helper.ToUserId).(string)
 
-	client := &Client{IdUser: userid,hub: h, conn: conn, send: make(chan *response.MessageResponse)}
+	client := &Client{IdUser: userid, hub: h, conn: conn, send: make(chan *response.MessageResponse)}
 	client.hub.RegisterClient <- client
 
-
 	go client.writeMessage()
-	go client.readMessage(userid,toUser)
+	go client.readMessage(userid, toUser)
 }

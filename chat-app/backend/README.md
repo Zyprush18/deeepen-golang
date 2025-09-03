@@ -4,7 +4,7 @@
 
 clone this repo:
 ```bash
-git clone https://github.com/Zyprush18/deeepen-golang/chat-app
+git clone https://github.com/Zyprush18/deeepen-golang/chat-app/backend
 cd chat-app
 ```
 

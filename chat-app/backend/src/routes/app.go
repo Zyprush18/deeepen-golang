@@ -5,12 +5,12 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/database"
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/handler/auth"
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/handler/auth/repositoryauth"
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/handler/auth/servicesauth"
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/handler/message"
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/middleware"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/database"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/auth"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/auth/repositoryauth"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/auth/servicesauth"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/message"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/middleware"
 )
 
 func RunApp() {

@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/helper"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/helper"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -32,8 +32,8 @@ func MiddlewareWs(next http.Handler) http.Handler {
 
 		claims := getTkn.Claims.(*jwt.RegisteredClaims)
 
-		ctx  := context.WithValue(r.Context(), helper.UserId, claims.ID)
-		ctx  = context.WithValue(ctx, helper.ToUserId, toUser)
+		ctx := context.WithValue(r.Context(), helper.UserId, claims.ID)
+		ctx = context.WithValue(ctx, helper.ToUserId, toUser)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

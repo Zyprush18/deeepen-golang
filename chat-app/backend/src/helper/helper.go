@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/model/response"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/model/response"
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
@@ -44,8 +44,8 @@ func GenerateToken(data *response.Auth) (string, error) {
 
 	claim := jwt.RegisteredClaims{
 		ID:        data.Uuid,
-			Subject:   data.Email,
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(30 * time.Minute)),
+		Subject:   data.Email,
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(30 * time.Minute)),
 	}
 
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, claim).SignedString(jwtKey)

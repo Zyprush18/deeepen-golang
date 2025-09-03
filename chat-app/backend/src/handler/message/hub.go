@@ -1,8 +1,7 @@
 package message
 
 import (
-
-	"github.com/Zyprush18/deeepen-golang/chat-app/src/model/response"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/model/response"
 )
 
 type Hub struct {
@@ -48,7 +47,7 @@ func (h *Hub) Run() {
 			}
 		case msg := <-h.Broadcast:
 			// private chat
-			if msg.To != ""{
+			if msg.To != "" {
 				// mengecek apakah si user ini koneksi nya ada atau nggak
 				if conn, ok := h.Client[msg.From]; ok {
 					for clients := range conn {
