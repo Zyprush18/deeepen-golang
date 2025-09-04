@@ -1,35 +1,56 @@
-import { redirect, type Actions } from "@sveltejs/kit";
-import axios from "axios";
-import * as z from "zod"
+import { API_URL } from '$env/static/private';
+import { redirect, type Actions } from '@sveltejs/kit';
+import axios from 'axios';
+import * as z from 'zod';
 
 // schema register / validation for form registerd
-const registerSchema =  z.object({
-    username: z.string().min(3, "Username Must be 3 character") ,
-    email: z.email("Not Email"),
-    password: z.string().min(6, "Password Must be 6 character").max(12, "password max 12 character"),
-    repassword: z.string().min(6, "Password Must be 6 character").max(12, "password max 12 character"),
-}).refine((data) => data.password === data.repassword, {
-    message: "Password don't match",
-    path: ["repassword"]
-})
+const registerSchema = z
+	.object({
+		username: z
+			.string({
+				error: (iss) => (iss.input === undefined ? 'Field is required.' : 'Invalid input.')
+			})
+			.min(3, 'Username Must be 3 character'),
+		email: z.email('Field Email must be email'),
+		password: z
+			.string({
+				error: (iss) => (iss.input === undefined ? 'Field is required.' : 'Invalid input.')
+			})
+			.min(6, 'Password Must be 6 character')
+			.max(12, 'password max 12 character'),
+		repassword: z
+			.string({
+				error: (iss) => (iss.input === undefined ? 'Field is required.' : 'Invalid input.')
+			})
+			.min(6, 'Repassword Must be 6 character')
+			.max(12, 'repassword max 12 character')
+	})
+	.refine((data) => data.password === data.repassword, {
+		message: "password and repassword don't match",
+		path: ['repassword']
+	});
 
 export const actions: Actions = {
-    default: async (event) => {
-        const formDataa = Object.fromEntries(await event.request.formData());
-        const talentData = registerSchema.safeParse(formDataa);
+	default: async (event) => {
+		const formData = Object.fromEntries(await event.request.formData());
+		const parsed = registerSchema.safeParse(formData);
+		if (!parsed.success) {
+			console.log(parsed.error.message);
+			return parsed.error.issues;
+		}
 
-        console.log(talentData);
-        // added to databases
-        if (talentData.data != null) {
-            await axios.post("http://localhost:3000/api/register",talentData.data).then((Response) =>{
-                console.log(Response);
-            }).catch((error)=>{
-                console.log(error);
-                
-            })
-            redirect(302,"/login")
-        }
+		try {
+			const response = await axios.post(API_URL + '/api/register', parsed.data);
+			console.log(response.data);
+            return response.data
+		} catch (error: any) {
+			console.log(error);
+            return {
+                status: error.response?.data?.status,
+                message: error.response?.data?.message
+            }
+		}
 
-        
-    }
+		// redirect(302,"/login")
+	}
 };

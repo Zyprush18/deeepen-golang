@@ -3,11 +3,16 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
-	import { actions } from './+page.server';
+	import ZodIssues from '$lib/components/ZodIssues.svelte';
+	let { form } = $props();
 
-    
+	type formsResp = {
+		data: any;
+	};
 
-	console.log(actions.default)
+	const response: formsResp = {
+		data: form
+	};
 </script>
 
 <svelte:head>
@@ -16,6 +21,9 @@
 
 <!-- <h1 class="text-5xl font-bold text-green-600 text-center">ZHAT</h1> -->
 <div class="flex h-screen items-center justify-center">
+	{#if response.data != null}
+		<ZodIssues issues={response.data} />
+	{/if}
 	<Card.Root class="w-full max-w-sm">
 		<Card.Header>
 			<Card.Title class="text-center text-2xl">Register</Card.Title>
@@ -26,17 +34,22 @@
 				<div class="mb-3 flex flex-col gap-6">
 					<div class="grid gap-2">
 						<Label for="username">Username</Label>
-						<Input id="username" type="text" name="username" placeholder="Joko" required />
+						<Input id="username" type="text" name="username" placeholder="Joko" />
 					</div>
 					<div class="grid gap-2">
 						<Label for="email">Email</Label>
-						<Input id="email" type="email" name="email" placeholder="m@example.com" required />
+						<Input id="email" type="email" name="email" placeholder="m@example.com" />
 					</div>
 					<div class="grid gap-2">
 						<div class="flex items-center">
 							<Label for="password">Password</Label>
 						</div>
-						<Input id="password" type="password" name="password" placeholder="enter your password...." required />
+						<Input
+							id="password"
+							type="password"
+							name="password"
+							placeholder="enter your password...."
+						/>
 					</div>
 					<div class="grid gap-2">
 						<div class="flex items-center">
@@ -45,13 +58,12 @@
 						<Input
 							id="repassword"
 							type="password"
-                            name="repassword"
+							name="repassword"
 							placeholder="enter your password again...."
-							required
 						/>
 					</div>
 				</div>
-				<span class="ml-auto inline-block text-sm text-gray-500 underline-offset-4 mb-2">
+				<span class="mb-2 ml-auto inline-block text-sm text-gray-500 underline-offset-4">
 					Sudah Punya Akun? <a href="/login" class="text-blue-500 hover:underline">Login</a>
 				</span>
 			</Card.Content>

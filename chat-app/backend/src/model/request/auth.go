@@ -1,13 +1,13 @@
 package request
 
 type Register struct {
-	Username string
-	Email string
-	Password string
-	Uuid string
+	Username string	`json:"username"`
+	Email string	`json:"email"`
+	Password string	`json:"password"`
+	Uuid string	`json:"uuid"`
 }
 
 type Login struct {
-	Email string
-	Password string
+	Email string `json:"email"`
+	Password string `json:"password"`
 }
