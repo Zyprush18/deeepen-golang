@@ -24,9 +24,10 @@
 	{#if response.data != null}
 		<ZodIssues issues={response.data} />
 	{/if}
-	<Card.Root class="w-full max-w-sm">
-		<Card.Header>
-			<Card.Title class="text-center text-2xl">Register</Card.Title>
+	<Card.Root class="w-full max-w-sm shadow-2xl">
+		<Card.Header class="text-center">
+			<span class="text-lg font-bold text-green-600">ZHAT</span>
+			<Card.Title class="text-2xl">Register</Card.Title>
 			<Card.Description>Enter your email below to create a new account</Card.Description>
 		</Card.Header>
 		<form method="POST">
@@ -63,12 +64,12 @@
 						/>
 					</div>
 				</div>
-				<span class="mb-2 ml-auto inline-block text-sm text-gray-500 underline-offset-4">
+				<span class="mb-5 ml-auto inline-block text-sm text-gray-500 underline-offset-4">
 					Sudah Punya Akun? <a href="/login" class="text-blue-500 hover:underline">Login</a>
 				</span>
 			</Card.Content>
 			<Card.Footer class="flex-col gap-2">
-				<Button type="submit" class="w-full">Register</Button>
+				<Button type="submit" class="w-full  bg-green-500 hover:bg-green-600">Register</Button>
 			</Card.Footer>
 		</form>
 	</Card.Root>

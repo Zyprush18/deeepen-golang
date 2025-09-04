@@ -1,10 +1,19 @@
-<script>
+<script lang="ts">
 	import AppLayout from '$lib/components/layout/App-Layout.svelte';
+
+	let {data} = $props();
+	console.log(data?.Auth);
+	
 </script>
 
+<svelte:head>
+	<title>ZHAT</title>
+</svelte:head>
+
 {#snippet test()}
-	<!-- <div class="flex h-full items-center justify-center">ddlklkk</div> -->
-    <h1 class="text-2xl">name</h1>
+	<div class="h-full p-5">
+		<h1>Kita</h1>
+	</div>
 {/snippet}
 
 <AppLayout children={test} />

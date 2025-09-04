@@ -11,7 +11,7 @@
     
 </script>
 
-<div class="absolute grid w-full max-w-xl items-end top-3 right-4 gap-4 z-30">
+<div class="absolute grid w-full max-w-xl items-end top-3 right-4 gap-4 z-30 shadow-md">
 	<Alert.Root variant="destructive">
 		<AlertCircleIcon />
 		<Alert.Title>Failed Register</Alert.Title>
