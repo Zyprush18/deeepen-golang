@@ -1,10 +1,12 @@
 package helper
 
 import (
+	"errors"
 	"log"
 	"time"
 
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/model/response"
+	"github.com/jackc/pgx/v5/pgconn"
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
@@ -58,4 +60,11 @@ func ParseToken(jwttoken string) (*jwt.Token, error) {
 		return jwtKey, nil
 	})
 
+}
+
+func CheckDuplicate(err error) bool  {
+	var pgErr  = &pgconn.PgError{
+		Code: "23505",
+	}
+	return errors.As(err, &pgErr)
 }

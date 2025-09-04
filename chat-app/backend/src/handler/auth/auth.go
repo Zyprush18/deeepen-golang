@@ -40,6 +40,14 @@ func (h *handleAuth) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.svc.Register(req); err != nil {
+		if helper.CheckDuplicate(err) {
+			w.WriteHeader(http.StatusConflict)
+			json.NewEncoder(w).Encode(helper.Messages{
+				Message: "Email Is Already Exists",
+			})
+			return
+		}
+
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(helper.Messages{
 			Message: "Something Went Wrong",
