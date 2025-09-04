@@ -3,15 +3,12 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
-	import { onMount } from 'svelte';
-	import { redirect } from '@sveltejs/kit';
 
-	const { form } = $props();
-	if (form?.status === 200) {
-		onMount(() => {
-			localStorage.setItem('token', form?.token == null ? '' : form?.token);
-		});
-	}
+
+	let { form } = $props();
+    console.log(form);
+    
+
 </script>
 
 <svelte:head>
