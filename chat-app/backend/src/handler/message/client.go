@@ -14,8 +14,9 @@ import (
 var upgrade = websocket.Upgrader{
 	// check who makes request
 	CheckOrigin: func(r *http.Request) bool {
-		origin := r.Header.Get("Origin")
-		return origin == "http://localhost:3000"
+		// origin := r.Header.Get("Origin")
+		// return origin == "http://localhost:3000"
+		return true
 	},
 }
 
@@ -29,7 +30,7 @@ type Client struct {
 	send chan *response.MessageResponse
 }
 
-func (c *Client) readMessage(fromuser, touser string) {
+func (c *Client) readMessage(fromuser, touser,name string) {
 	defer func() {
 		c.hub.RemoveClient <- c
 		c.conn.Close()
@@ -43,7 +44,7 @@ func (c *Client) readMessage(fromuser, touser string) {
 	// set read deadline
 	c.conn.SetReadDeadline(time.Now().Add(10 * time.Second))
 	c.conn.SetPongHandler(func(appData string) error {
-		// log.Println("send pong")
+		log.Println("send pong")
 		return c.conn.SetReadDeadline(time.Now().Add(10 * time.Second))
 	})
 	for {
@@ -55,7 +56,7 @@ func (c *Client) readMessage(fromuser, touser string) {
 			break
 		}
 
-		c.hub.Broadcast <- &response.MessageResponse{From: fromuser, To: touser, Type: typeChat, Message: string(msg)}
+		c.hub.Broadcast <- &response.MessageResponse{Name: name,From: fromuser, To: touser, Type: typeChat, Message: string(msg)}
 	}
 }
 
@@ -79,13 +80,14 @@ func (c *Client) writeMessage() {
 				log.Println("Failed Write: ", err)
 				return
 			}
-
+			c.conn.SetWriteDeadline(time.Time{})
 		case <-ticker.C:
 			c.conn.SetWriteDeadline(time.Now().Add(5 * time.Second))
-			// log.Println("send ping")
+			log.Println("send ping")
 			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return
 			}
+			c.conn.SetWriteDeadline(time.Time{})
 		}
 	}
 }
@@ -100,10 +102,12 @@ func ServeWs(h *Hub, w http.ResponseWriter, r *http.Request) {
 	// ambil name dari request context user login
 	userid := r.Context().Value(helper.UserId).(string)
 	toUser := r.Context().Value(helper.ToUserId).(string)
+	name := r.Context().Value(helper.Name).(string)
+
 
 	client := &Client{IdUser: userid, hub: h, conn: conn, send: make(chan *response.MessageResponse)}
 	client.hub.RegisterClient <- client
 
 	go client.writeMessage()
-	go client.readMessage(userid, toUser)
+	go client.readMessage(userid, toUser,name)
 }

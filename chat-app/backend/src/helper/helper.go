@@ -16,7 +16,13 @@ type ctxkey string
 
 const UserId ctxkey = "userid"
 const ToUserId ctxkey = "touserid"
+const Name ctxkey = "username"
 
+
+type CustomJwt struct {
+	Name string
+	jwt.RegisteredClaims
+}
 type Messages struct {
 	Message string `json:"message"`
 	Data    any    `json:"data,omitempty"`
@@ -43,11 +49,15 @@ func CheckHashPw(pass, reqpass string) bool {
 
 func GenerateToken(data *response.Auth) (string, error) {
 	jwtKey := []byte("chatrealt1me")
+	
 
-	claim := jwt.RegisteredClaims{
+	claim := CustomJwt{
+		Name: data.Username,
+		RegisteredClaims: jwt.RegisteredClaims{
 		ID:        data.Uuid,
 		Subject:   data.Email,
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(30 * time.Minute)),
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
+	},
 	}
 
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, claim).SignedString(jwtKey)
@@ -56,7 +66,7 @@ func GenerateToken(data *response.Auth) (string, error) {
 func ParseToken(jwttoken string) (*jwt.Token, error) {
 	jwtKey := []byte("chatrealt1me")
 
-	return jwt.ParseWithClaims(jwttoken, &jwt.RegisteredClaims{}, func(t *jwt.Token) (any, error) {
+	return jwt.ParseWithClaims(jwttoken, &CustomJwt{}, func(t *jwt.Token) (any, error) {
 		return jwtKey, nil
 	})
 

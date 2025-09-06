@@ -12,30 +12,30 @@
 	// Menu items.
 	const items = [
 		{
-			title: 'Angga',
-			url: '#',
-			src: profile3
-		},
-		{
-			title: 'Farel',
-			url: '#',
-			src: profile6
-		},
-		{
-			title: 'Muaiman',
+			title: 'Public',
 			url: '#',
 			src: profile10
 		},
-		{
-			title: 'Eko',
-			url: '#',
-			src: profile26
-		},
-		{
-			title: 'Budi',
-			url: '#',
-			src: profile25
-		}
+		// {
+		// 	title: 'Farel',
+		// 	url: '#',
+		// 	src: profile6
+		// },
+		// {
+		// 	title: 'Muaiman',
+		// 	url: '#',
+		// 	src: profile10
+		// },
+		// {
+		// 	title: 'Eko',
+		// 	url: '#',
+		// 	src: profile26
+		// },
+		// {
+		// 	title: 'Budi',
+		// 	url: '#',
+		// 	src: profile25
+		// }
 	];
 </script>
 

@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/helper"
-	"github.com/golang-jwt/jwt/v5"
 )
 
 func MiddlewareWs(next http.Handler) http.Handler {
@@ -30,10 +29,11 @@ func MiddlewareWs(next http.Handler) http.Handler {
 			return
 		}
 
-		claims := getTkn.Claims.(*jwt.RegisteredClaims)
+		claims := getTkn.Claims.(*helper.CustomJwt)
 
 		ctx := context.WithValue(r.Context(), helper.UserId, claims.ID)
 		ctx = context.WithValue(ctx, helper.ToUserId, toUser)
+		ctx = context.WithValue(ctx, helper.Name, claims.Name)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
