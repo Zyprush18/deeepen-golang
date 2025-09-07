@@ -15,8 +15,8 @@ function ConnectWebsocket(token: any) {
 	});
 }
 
-function sendMessage(message:string) {
-    if (socket.readyState <= 1) {
+async function sendMessage(message:string) {
+    if (socket.readyState  === socket.OPEN) {
         socket.send(message)
     }
 }

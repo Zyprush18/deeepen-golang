@@ -35,14 +35,14 @@ func (h *Hub) Run() {
 			if cons, ok := h.Client[client.IdUser]; ok {
 				// mengecek koneksi dari client tersebut
 				if _, ok := cons[client]; ok {
-					delete(cons, client)
 					close(client.send)
+					delete(cons, client)
 				}
 
 				// mengecek apakah koneksi client nya itu masih ada atau nggak
 				if len(cons) == 0 {
-					delete(h.Client, client.IdUser)
-					close(client.send)
+					// close(client.send)
+					delete(cons, client)
 				}
 			}
 		case msg := <-h.Broadcast:

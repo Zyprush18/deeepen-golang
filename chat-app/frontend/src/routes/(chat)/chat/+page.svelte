@@ -13,16 +13,17 @@
 
 	onMount(() => {
 		wss.connect(data?.Auth);
-		wss.subscribe((currentMessage) => {
-			messages = [...messages, currentMessage];
+		wss.subscribe((msg) => {
+			messages = [...messages, msg];
 		});
 	});
 
 	function sendMessage() {
 		if (message.length > 0) {
 			wss.send(message);
+			message = '';
 		}
-	}	
+	}
 </script>
 
 <svelte:head>
@@ -30,11 +31,13 @@
 </svelte:head>
 
 {#snippet test()}
-	<div class="p-4">
-		{#each messages as msg}
-			<Messages {msg} />
-		{/each}
-	</div>
+	{#each messages as msg, i}
+		<div class="p-7">
+			{#if msg !== ''}
+				<Messages {msg} direction={i % 2 == 0 ? 'right' : 'left'} />
+			{/if}
+		</div>
+	{/each}
 
 	<div class="flex min-h-full justify-center">
 		<div class="fixed bottom-0 mb-4 flex w-full justify-center space-x-3">
