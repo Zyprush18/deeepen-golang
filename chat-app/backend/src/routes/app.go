@@ -22,6 +22,7 @@ func RunApp() {
 
 	http.HandleFunc("/api/register", authhandler.Register)
 	http.HandleFunc("/api/login", authhandler.Login)
+	http.Handle("/api/profile", middleware.AuthMiddleware(http.HandlerFunc(authhandler.Profile)))
 
 	h := message.NewHub()
 	go h.Run()

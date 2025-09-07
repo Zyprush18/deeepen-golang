@@ -31,12 +31,10 @@
 </svelte:head>
 
 {#snippet test()}
-	{#each messages as msg, i}
-		<div class="p-7">
-			{#if msg !== ''}
-				<Messages {msg} direction={i % 2 == 0 ? 'right' : 'left'} />
-			{/if}
-		</div>
+	{#each messages as msg}
+		{#if msg !== ''}
+				<Messages {msg} name={data.Profile} />
+		{/if}
 	{/each}
 
 	<div class="flex min-h-full justify-center">
@@ -52,4 +50,4 @@
 	</div>
 {/snippet}
 
-<AppLayout children={test} />
+<AppLayout profile={data.Profile} children={test} />

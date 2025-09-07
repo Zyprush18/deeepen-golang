@@ -17,6 +17,7 @@ type ctxkey string
 const UserId ctxkey = "userid"
 const ToUserId ctxkey = "touserid"
 const Name ctxkey = "username"
+const Email ctxkey = "email"
 
 
 type CustomJwt struct {

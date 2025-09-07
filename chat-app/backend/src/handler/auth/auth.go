@@ -103,3 +103,39 @@ func (h *handleAuth) Login(w http.ResponseWriter, r *http.Request) {
 		Token:   tokens,
 	})
 }
+
+func (h *handleAuth) Profile(w http.ResponseWriter, r *http.Request)  {
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		json.NewEncoder(w).Encode(helper.Messages{
+			Message: "Only Get Method Is Allowed",
+		})
+		return
+	}
+
+	email := r.Context().Value(helper.Email).(string)
+	
+	resp, err := h.svc.Profile(email)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(helper.Messages{
+				Message: "Email Not Found",
+			})
+			return
+		}
+
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(helper.Messages{
+			Message: "Something Went Wrong",
+		})
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(helper.Messages{
+		Message: "Success",
+		Data: resp,
+	})
+
+}

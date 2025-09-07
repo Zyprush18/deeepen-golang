@@ -3,11 +3,11 @@
     import AppSidebar from "$lib/components/layout/Sidebar-Layout.svelte";
     import Navbar from "$lib/components/layout/Navbar-Layout.svelte";
 
-    let { children } = $props();
+    let { children,profile } = $props();
 </script>
 
 <Sidebar.Provider class="min-h-full">
-    <AppSidebar />
+    <AppSidebar data={profile} />
     <main class="flex-1 block">
         <Navbar />
         {@render children?.()}

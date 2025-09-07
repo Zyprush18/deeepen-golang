@@ -9,6 +9,8 @@
 	import profile26 from '$lib/assets/avatars/26.png';
 	import profile25 from '$lib/assets/avatars/25.png';
 
+	const {data} = $props()	
+
 	// Menu items.
 	const items = [
 		{
@@ -79,7 +81,7 @@
 								class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground text-md py-8 font-bold"
 							>
 								<img src={profile23} alt="" class="mr-2 h-[47px] w-[47px]" />
-								Zul
+								{data.data.username}
 								<ChevronUp class="ml-auto" />
 							</Sidebar.MenuButton>
 						{/snippet}

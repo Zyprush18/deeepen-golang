@@ -10,6 +10,7 @@ import (
 type AuthRepo interface {
 	Register(req *request.Register) error
 	Login(email string) (*response.Auth, error)
+	Profile(email string) (*response.Profile, error)
 }
 
 type database struct {
@@ -35,4 +36,17 @@ func (d *database) Login(email string) (*response.Auth, error) {
 	}
 
 	return &modelauth, nil
+}
+
+func (d *database) Profile(email string) (*response.Profile, error) {
+	var modelauth response.Auth
+	if err := d.db.Table("users").Where("email = ?", email).First(&modelauth).Error; err != nil {
+		return nil, err
+	}
+
+	return &response.Profile{
+		Username: modelauth.Username,
+		Email: modelauth.Email,
+		Uuid: modelauth.Uuid,
+	}, nil
 }

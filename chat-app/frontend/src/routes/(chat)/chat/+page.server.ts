@@ -1,11 +1,14 @@
+import { getData } from '$lib/utils/profile.js';
 import { redirect } from '@sveltejs/kit';
 
-export function load({ cookies }) {
+
+export async function load({ cookies }) {
 	const auth = cookies.get('auth');
 
 	if (auth === '' || auth === undefined) {
 		throw redirect(302, '/login');
 	}
 
-    return {Auth: auth}
+	const profile = await getData(auth)
+    return {Auth: auth, Profile: profile}
 }
