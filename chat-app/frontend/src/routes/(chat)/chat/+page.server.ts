@@ -9,6 +9,12 @@ export async function load({ cookies }) {
 		throw redirect(302, '/login');
 	}
 
-	const profile = await getData(auth)
+	const profile = await getData(auth);
+	
+	if (profile.status != 200) {	
+		cookies.delete("auth", {path:"/chat"});
+		throw redirect(302, "/login");
+		
+	}
     return {Auth: auth, Profile: profile}
 }

@@ -105,6 +105,7 @@ func (h *handleAuth) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *handleAuth) Profile(w http.ResponseWriter, r *http.Request)  {
+	w.Header().Set("Content-Type", "application/json")
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		json.NewEncoder(w).Encode(helper.Messages{
@@ -134,6 +135,7 @@ func (h *handleAuth) Profile(w http.ResponseWriter, r *http.Request)  {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(helper.Messages{
+		Status: http.StatusOK,
 		Message: "Success",
 		Data: resp,
 	})

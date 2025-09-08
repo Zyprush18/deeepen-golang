@@ -16,9 +16,9 @@ export async function getData(auth: string): Promise<Response> {
 			}
 		});
 
-        return resp.data as Response
-	} catch (error) {
+        return resp.data as Response;
+	} catch (error: any) {
 		console.log(error);
-        throw error
+        throw error.response
 	}
 }

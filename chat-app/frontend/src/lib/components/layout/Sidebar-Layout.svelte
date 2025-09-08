@@ -2,43 +2,10 @@
 	import ChevronUp from '@lucide/svelte/icons/chevron-up';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
-	import profile3 from '$lib/assets/avatars/3.png';
-	import profile6 from '$lib/assets/avatars/6.png';
 	import profile10 from '$lib/assets/avatars/10.png';
 	import profile23 from '$lib/assets/avatars/23.png';
-	import profile26 from '$lib/assets/avatars/26.png';
-	import profile25 from '$lib/assets/avatars/25.png';
 
-	const {data} = $props()	
-
-	// Menu items.
-	const items = [
-		{
-			title: 'Public',
-			url: '#',
-			src: profile10
-		},
-		// {
-		// 	title: 'Farel',
-		// 	url: '#',
-		// 	src: profile6
-		// },
-		// {
-		// 	title: 'Muaiman',
-		// 	url: '#',
-		// 	src: profile10
-		// },
-		// {
-		// 	title: 'Eko',
-		// 	url: '#',
-		// 	src: profile26
-		// },
-		// {
-		// 	title: 'Budi',
-		// 	url: '#',
-		// 	src: profile25
-		// }
-	];
+	const {data} = $props();	
 </script>
 
 <Sidebar.Root>
@@ -53,13 +20,17 @@
 			<Sidebar.GroupLabel>Message</Sidebar.GroupLabel>
 			<Sidebar.GroupContent>
 				<Sidebar.Menu>
-					{#each items as item (item.title)}
+					{#each data.data.friend as item }
 						<Sidebar.MenuItem>
 							<Sidebar.MenuButton class="py-8">
+								<!-- <a href="/chat">
+										<img src={profile10} alt="" class="h-[47px] w-[47px]" />
+										<span class="text-lg">Public</span>
+									</a> -->
 								{#snippet child({ props })}
-									<a href={item.url} {...props}>
-										<img src={item.src} alt="" class="h-[47px] w-[47px]" />
-										<span class="text-lg">{item.title}</span>
+									<a href={`/chat/${item.uuid}`} {...props}>
+										<img src={profile10} alt="" class="h-[47px] w-[47px]" />
+										<span class="text-lg">{item.name}</span>
 									</a>
 								{/snippet}
 							</Sidebar.MenuButton>

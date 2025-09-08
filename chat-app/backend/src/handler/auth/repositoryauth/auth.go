@@ -1,6 +1,7 @@
 package repositoryauth
 
 import (
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/database"
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/model/request"
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/model/response"
 
@@ -13,15 +14,15 @@ type AuthRepo interface {
 	Profile(email string) (*response.Profile, error)
 }
 
-type database struct {
+type databases struct {
 	db *gorm.DB
 }
 
-func Connect(d *gorm.DB) database {
-	return database{db: d}
+func Connect(d *gorm.DB) databases {
+	return databases{db: d}
 }
 
-func (d *database) Register(req *request.Register) error {
+func (d *databases) Register(req *request.Register) error {
 	if err := d.db.Table("users").Create(req).Error; err != nil {
 		return err
 	}
@@ -29,7 +30,7 @@ func (d *database) Register(req *request.Register) error {
 	return nil
 }
 
-func (d *database) Login(email string) (*response.Auth, error) {
+func (d *databases) Login(email string) (*response.Auth, error) {
 	var modelauth response.Auth
 	if err := d.db.Table("users").Where("email = ?", email).First(&modelauth).Error; err != nil {
 		return nil, err
@@ -38,15 +39,17 @@ func (d *database) Login(email string) (*response.Auth, error) {
 	return &modelauth, nil
 }
 
-func (d *database) Profile(email string) (*response.Profile, error) {
-	var modelauth response.Auth
-	if err := d.db.Table("users").Where("email = ?", email).First(&modelauth).Error; err != nil {
+func (d *databases) Profile(email string) (*response.Profile, error) {
+	var modelauth database.User
+	if err := d.db.Model(&modelauth).Preload("Friends.Users").Where("email = ?", email).First(&modelauth).Error; err != nil {
 		return nil, err
 	}
 
 	return &response.Profile{
+		Id: modelauth.ID,
 		Username: modelauth.Username,
 		Email: modelauth.Email,
-		Uuid: modelauth.Uuid,
+		Uuid: modelauth.UUID,
+		Friends: response.ParseFriend(modelauth.Friends),
 	}, nil
 }

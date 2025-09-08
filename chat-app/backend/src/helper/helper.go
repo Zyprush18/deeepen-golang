@@ -27,6 +27,7 @@ type CustomJwt struct {
 type Messages struct {
 	Message string `json:"message"`
 	Data    any    `json:"data,omitempty"`
+	Status  int `json:"status,omitempty"`
 	Errors  string `json:"error,omitempty"`
 	Token   string `json:"token,omitempty"`
 }

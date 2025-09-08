@@ -3,8 +3,8 @@ import { writable } from 'svelte/store';
 const messageStore = writable('');
 let socket:WebSocket;
 
-function ConnectWebsocket(token: any) {
-	socket = new WebSocket(`ws://localhost:3000/ws/chat?token=${token}`);
+function ConnectWebsocket(token: any,uuid: any) {
+	socket = new WebSocket(`ws://localhost:3000/ws/chat?token=${token}&toUser=${uuid}`);
 
 	socket.addEventListener('open', function (event) {
 		console.log("it's Open");

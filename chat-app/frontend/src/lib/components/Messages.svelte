@@ -7,7 +7,9 @@
 	}
 </script>
 
+{#if data.to === prop.slug}
 <div class="p-3" class:text-right={data.name === prop.name.data.username} class:text-left={data.name !== prop.name.data.username}>
     <span class="text-sm text-gray-500">~{data.name}</span>
     <p class="mb-4">{data.message}</p>
 </div>
+{/if}

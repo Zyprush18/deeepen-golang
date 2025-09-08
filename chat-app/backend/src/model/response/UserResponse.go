@@ -11,7 +11,9 @@ type Auth struct {
 }
 
 type Profile struct {
+	Id  uint `json:"id"`
 	Username string `json:"username"`
 	Email string `json:"email"`
 	Uuid string `json:"uuid"`
+	Friends []Friend `json:"friend"`
 }
