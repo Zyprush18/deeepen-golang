@@ -2,6 +2,7 @@ package helper
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"time"
 
@@ -15,6 +16,7 @@ import (
 type ctxkey string
 
 const UserId ctxkey = "userid"
+const Uuid ctxkey = "uuid"
 const ToUserId ctxkey = "touserid"
 const Name ctxkey = "username"
 const Email ctxkey = "email"
@@ -22,6 +24,7 @@ const Email ctxkey = "email"
 
 type CustomJwt struct {
 	Name string
+	Uuid string
 	jwt.RegisteredClaims
 }
 type Messages struct {
@@ -55,8 +58,9 @@ func GenerateToken(data *response.Auth) (string, error) {
 
 	claim := CustomJwt{
 		Name: data.Username,
+		Uuid: data.Uuid,
 		RegisteredClaims: jwt.RegisteredClaims{
-		ID:        data.Uuid,
+		ID: fmt.Sprintf("%d",data.ID),
 		Subject:   data.Email,
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 	},

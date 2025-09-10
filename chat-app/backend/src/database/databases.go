@@ -8,7 +8,7 @@ type User struct {
 	Email string	`json:"email" gorm:"unique;type:varchar(100)"`
 	Password string	`json:"password" gorm:"type:varchar(255)"`
 	UUID string	`json:"uuid" gorm:"type:varchar(255)"`
-	Friends []Friend `gorm:"foreignKey:From_id;refrences:ID"`
+	Friends []Friend `gorm:"foreignKey:From_id;references:ID"`
 }
 
 type Friend struct {

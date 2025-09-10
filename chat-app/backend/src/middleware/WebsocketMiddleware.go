@@ -31,6 +31,8 @@ func AuthMiddleware(next http.Handler) http.Handler  {
 
 		token := parsToken.Claims.(*helper.CustomJwt)
 		ctx := context.WithValue(r.Context(), helper.Email, token.Subject)
+		ctx = context.WithValue(ctx, helper.UserId, token.ID)
+
 		next.ServeHTTP(w,r.WithContext(ctx))
 	})
 }
@@ -59,7 +61,7 @@ func MiddlewareWs(next http.Handler) http.Handler {
 
 		claims := getTkn.Claims.(*helper.CustomJwt)
 
-		ctx := context.WithValue(r.Context(), helper.UserId, claims.ID)
+		ctx := context.WithValue(r.Context(), helper.Uuid, claims.Uuid)
 		ctx = context.WithValue(ctx, helper.ToUserId, toUser)
 		ctx = context.WithValue(ctx, helper.Name, claims.Name)
 		next.ServeHTTP(w, r.WithContext(ctx))

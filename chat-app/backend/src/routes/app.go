@@ -9,9 +9,9 @@ import (
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/auth"
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/auth/repositoryauth"
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/auth/servicesauth"
-	// "github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/friend"
-	// "github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/friend/repositoryfriend"
-	// "github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/friend/servicefriend"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/friend"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/friend/repositoryfriend"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/friend/servicefriend"
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/message"
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/middleware"
 )
@@ -29,10 +29,12 @@ func RunApp() {
 	http.Handle("/api/profile", middleware.AuthMiddleware(http.HandlerFunc(authhandler.Profile)))
 
 	// friend
-	// repofriend := repositoryfriend.ConnectDb(initdb)
-	// friendsvc := servicefriend.NewService(&repofriend)
-	// friendhandler := friend.NewHandle(friendsvc)
-	// http.HandleFunc("/api/friend/{id}", friendhandler.GetAll)
+	repofriend := repositoryfriend.ConnectDb(initdb)
+	friendsvc := servicefriend.NewService(&repofriend)
+	friendhandler := friend.NewHandle(friendsvc)
+	http.HandleFunc("/api/friend/add", friendhandler.Create)
+	http.HandleFunc("/api/friend/update", friendhandler.Update)
+	http.HandleFunc("/api/friend/delete", friendhandler.Delete)
 
 	// message
 	h := message.NewHub()

@@ -10,7 +10,7 @@
 
 {#snippet test()}
 	<div class="flex h-full items-center justify-center">
-		<h1>Hello Zhat</h1>
+		<h1 class="text-7xl font-bold text-gray-400">Welcome To Zhat</h1>
 	</div>
 {/snippet}
 

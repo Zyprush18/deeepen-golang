@@ -32,6 +32,7 @@ type Client struct {
 
 func (c *Client) readMessage(fromuser, touser,name string) {
 	defer func() {
+		log.Println("user close read")
 		c.hub.RemoveClient <- c
 		c.conn.Close()
 	}()
@@ -63,6 +64,7 @@ func (c *Client) readMessage(fromuser, touser,name string) {
 func (c *Client) writeMessage() {
 	ticker := time.NewTicker(5 * time.Second)
 	defer func() {
+		log.Println("user close write")
 		ticker.Stop()
 		c.conn.Close()
 	}()
@@ -100,7 +102,7 @@ func ServeWs(h *Hub, w http.ResponseWriter, r *http.Request) {
 	}
 
 	// ambil name dari request context user login
-	userid := r.Context().Value(helper.UserId).(string)
+	userid := r.Context().Value(helper.Uuid).(string)
 	toUser := r.Context().Value(helper.ToUserId).(string)
 	name := r.Context().Value(helper.Name).(string)
 

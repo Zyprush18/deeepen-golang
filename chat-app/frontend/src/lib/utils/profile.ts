@@ -1,11 +1,20 @@
 import axios from 'axios';
 import { API_URL } from '$env/static/private';
 
+type friend = {
+	name: string;
+	status: string;
+	uuid: string;
+};
+
 type Response = {
     status: number
     username:string
     email:string
     uuid:string
+	data: {
+		friend: friend[]
+	}
 }
 
 export async function getData(auth: string): Promise<Response> {

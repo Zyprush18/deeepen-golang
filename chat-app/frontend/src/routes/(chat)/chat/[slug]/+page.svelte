@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import type { PageProps } from './$types';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 	import AppLayout from '$lib/components/layout/App-Layout.svelte';
 	import Messages from '$lib/components/Messages.svelte';
@@ -9,21 +10,35 @@
 
 	let message = $state('');
 	let messages = $state<string[]>([]);
-	let { data } = $props();
+	let { data }: PageProps = $props();
+
+	$effect(() => {
+		wss.connect(data?.Auth, data?.Slug);
+	});
 
 	onMount(() => {
-		wss.connect(data?.Auth, data?.Slug);
 		wss.subscribe((msg) => {
 			messages = [...messages, msg];
 		});
 	});
-
 	function sendMessage() {
 		if (message.length > 0) {
 			wss.send(message);
 			message = '';
 		}
 	}
+
+
+	type friend = {
+		name: string;
+		status: string;
+		uuid: string;
+	};
+
+    const namefriend = data.Profile?.data.friend.find((e: friend)=> e.uuid === data.Slug)
+	
+
+
 </script>
 
 <svelte:head>
@@ -33,21 +48,22 @@
 {#snippet test()}
 	{#each messages as msg}
 		{#if msg !== ''}
-				<Messages {msg} name={data.Profile} slug={data.Slug} />
+			<Messages {msg} profile={data.Profile} slug={data.Slug} friend={namefriend}  />
 		{/if}
 	{/each}
 
-	<div class="flex justify-center">
-		<div class="fixed bottom-0 mb-4 flex w-full justify-center space-x-3">
-			<Textarea
-				name="message"
-				bind:value={message}
-				placeholder="enter your message....."
-				class="max-h-40 min-h-[40px] w-[60%] resize-none overflow-y-auto bg-gray-100 shadow-md"
-			/>
-			<Button class="h-10 w-10 rounded-full" onclick={sendMessage}><SendHorizontal /></Button>
+		<div class="sticky flex justify-center mt-14">
+			<div class="fixed bottom-0 mb-4 flex w-full justify-center space-x-3">
+				<Textarea
+					name="message"
+					bind:value={message}
+					placeholder="enter your message....."
+					class="max-h-40 min-h-[40px] w-[60%] resize-none overflow-y-auto bg-gray-100 shadow-md"
+				/>
+				<Button class="h-10 w-10 rounded-full" onclick={sendMessage}><SendHorizontal /></Button>
+			</div>
 		</div>
-	</div>
+
 {/snippet}
 
 <AppLayout slug={data.Slug} profile={data.Profile} children={test} />

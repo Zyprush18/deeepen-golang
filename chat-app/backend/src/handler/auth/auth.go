@@ -3,7 +3,9 @@ package auth
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/auth/servicesauth"
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/helper"
@@ -115,8 +117,17 @@ func (h *handleAuth) Profile(w http.ResponseWriter, r *http.Request)  {
 	}
 
 	email := r.Context().Value(helper.Email).(string)
+	id,err := strconv.Atoi(r.Context().Value(helper.UserId).(string))
+	fmt.Println(r.Context().Value(helper.UserId).(string))
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(helper.Messages{
+			Message: "Invalid Type id",
+		})
+		return
+	}
 	
-	resp, err := h.svc.Profile(email)
+	resp, err := h.svc.Profile(email,id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			w.WriteHeader(http.StatusNotFound)
