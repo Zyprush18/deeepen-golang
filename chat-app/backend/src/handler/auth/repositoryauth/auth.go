@@ -1,10 +1,6 @@
 package repositoryauth
 
 import (
-	// "fmt"
-
-	"fmt"
-
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/database"
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/model/request"
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/model/response"
@@ -15,7 +11,7 @@ import (
 type AuthRepo interface {
 	Register(req *request.Register) error
 	Login(email string) (*response.Auth, error)
-	Profile(email string,id int) ([]database.User, error)
+	Profile(email string) (*response.Profile, error)
 }
 
 type databases struct {
@@ -43,27 +39,12 @@ func (d *databases) Login(email string) (*response.Auth, error) {
 	return &modelauth, nil
 }
 
-func (d *databases) Profile(email string,id int) ([]database.User, error) {
+func (d *databases) Profile(email string) (*response.Profile, error) {
 	var modelauth database.User
-	var modelauthtest []database.User
-	if err := d.db.Model(&modelauth).Preload("Friends.Users").Where("email = ?", email).First(&modelauth).Error; err != nil {
+
+	if err := d.db.Model(&modelauth).Where("email = ? ", email).First(&modelauth).Error; err != nil {
 		return nil, err
 	}
 
-	if err:= d.db.Model(&modelauth).Preload("Friends.Users").Debug().Joins("JOIN friends ON friends.from_id = users.id OR friends.to_user_id = users.id").Where("email = ? AND (friends.from_id = ? OR friends.to_user_id = ?)", email, id, id).Scan(&modelauthtest).Error;err != nil {
-		return nil, err
-	}
-	fmt.Println(modelauthtest)
-
-	// fmt.Println(modelauthtest)
-
-	// return &response.Profile{
-	// 	Id: modelauth.ID,
-	// 	Username: modelauth.Username,
-	// 	Email: modelauth.Email,
-	// 	Uuid: modelauth.UUID,
-	// 	Friends: response.ParseFriend(modelauth.Friends),
-	// }, nil
-
-	return modelauthtest,nil
+	return response.ParseProfile(&modelauth),nil
 }

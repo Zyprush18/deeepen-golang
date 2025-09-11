@@ -4,17 +4,17 @@ import (
 	"crypto/rand"
 	"errors"
 
-	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/database"
+
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/handler/auth/repositoryauth"
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/helper"
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/model/request"
-	// "github.com/Zyprush18/deeepen-golang/chat-app/backend/src/model/response"
+	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/model/response"
 )
 
 type AuthService interface {
 	Register(req *request.Register) error
 	Login(req *request.Login) (string, error)
-	Profile(email string,id int) ([]database.User, error)
+	Profile(email string) (*response.Profile, error)
 }
 
 type takeAuthRepo struct {
@@ -44,6 +44,6 @@ func (r *takeAuthRepo) Login(req *request.Login) (string, error) {
 	return helper.GenerateToken(data)
 }
 
-func (r *takeAuthRepo) Profile(email string, id int) ([]database.User, error)  {
-	return  r.repo.Profile(email,id)
+func (r *takeAuthRepo) Profile(email string) (*response.Profile, error)  {
+	return  r.repo.Profile(email)
 }

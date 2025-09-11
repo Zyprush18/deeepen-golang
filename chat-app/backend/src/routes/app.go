@@ -32,9 +32,10 @@ func RunApp() {
 	repofriend := repositoryfriend.ConnectDb(initdb)
 	friendsvc := servicefriend.NewService(&repofriend)
 	friendhandler := friend.NewHandle(friendsvc)
-	http.HandleFunc("/api/friend/add", friendhandler.Create)
-	http.HandleFunc("/api/friend/update", friendhandler.Update)
-	http.HandleFunc("/api/friend/delete", friendhandler.Delete)
+	http.Handle("/api/friend", middleware.AuthMiddleware(http.HandlerFunc(friendhandler.AllFriend)))
+	http.Handle("/api/friend/add", middleware.AuthMiddleware(http.HandlerFunc(friendhandler.Create)))
+	http.Handle("/api/friend/update", middleware.AuthMiddleware(http.HandlerFunc(friendhandler.Update)))
+	http.Handle("/api/friend/delete/{to}", middleware.AuthMiddleware(http.HandlerFunc(friendhandler.Delete)))
 
 	// message
 	h := message.NewHub()

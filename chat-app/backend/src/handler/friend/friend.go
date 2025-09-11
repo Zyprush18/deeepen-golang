@@ -22,6 +22,48 @@ func NewHandle(s servicefriend.FriendRepo) handleFriend {
 	return handleFriend{svc: s}
 }
 
+func (h *handleFriend) AllFriend(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		json.NewEncoder(w).Encode(helper.Messages{
+			Message: "Only Get Method Is Allowed",
+		})
+		return
+	}
+
+	id,err := strconv.Atoi(r.Context().Value(helper.UserId).(string))
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(helper.Messages{
+			Message: "Invalid type id",
+		})
+		return
+	}
+
+	resp,err := h.svc.ListAllFriend(id)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(helper.Messages{
+				Message: "No friends",
+			})
+			return
+		}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(helper.Messages{
+			Message: "Something Went Wrong",
+		})
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(helper.Messages{
+		Message: "Success",
+		Data: resp,
+	})
+
+}
 func (h *handleFriend) Create(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	if r.Method != http.MethodPost {
@@ -62,6 +104,7 @@ func (h *handleFriend) Create(w http.ResponseWriter, r *http.Request) {
 	})
 
 }
+
 func (h *handleFriend) Update(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	if r.Method != http.MethodPut {
@@ -72,6 +115,8 @@ func (h *handleFriend) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	role := r.URL.Query().Get("role")
+
 	req := new(request.Friends)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -81,7 +126,7 @@ func (h *handleFriend) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.svc.UpdateFriend(req); err != nil {
+	if err := h.svc.UpdateFriend(req,role); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			w.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(w).Encode(helper.Messages{
@@ -102,6 +147,7 @@ func (h *handleFriend) Update(w http.ResponseWriter, r *http.Request) {
 	})
 
 }
+
 func (h *handleFriend) Delete(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	if r.Method != http.MethodDelete {
@@ -112,11 +158,11 @@ func (h *handleFriend) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	from,err := strconv.Atoi(r.PathValue("from"))
+	from,err := strconv.Atoi(r.Context().Value(helper.UserId).(string))
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(helper.Messages{
-			Message: "Invalid Type Query",
+			Message: "Invalid Type id",
 		})
 		return
 	}
@@ -124,7 +170,7 @@ func (h *handleFriend) Delete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(helper.Messages{
-			Message: "Invalid Type Query",
+			Message: "Invalid Type Params",
 		})
 		return
 	}
