@@ -4,11 +4,11 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import profile10 from '$lib/assets/avatars/10.png';
 	import profile23 from '$lib/assets/avatars/23.png';
+	import { Plus } from '@lucide/svelte';
+	import * as Dialog from '$lib/components/ui/dialog/index.js';
 
-	const { data } = $props();
-	const acceptData = data.data.friend.filter((f: { status: string; }) => f.status === 'accept')
-	const pendingData = data.data.friend.filter((f: { status: string; }) => f.status === 'pending')
-	
+	const { profile, friends, create } = $props();
+	const friendPending = friends.data.filter((f: { status: string }) => f.status == 'pending');
 </script>
 
 <Sidebar.Root>
@@ -22,16 +22,34 @@
 
 	<Sidebar.Content>
 		<Sidebar.Group>
-			<Sidebar.GroupLabel>Message</Sidebar.GroupLabel>
+			<Sidebar.GroupLabel class="justify-between">
+				<span>Message</span>
+				<Dialog.Root>
+					<Dialog.Trigger ><Plus /></Dialog.Trigger>
+					<Dialog.Content class="sm:max-w-[425px]">
+						<Dialog.Header>
+							<Dialog.Title>Add</Dialog.Title>
+							<Dialog.Description>
+								Added Your Friends
+						</Dialog.Description>
+						</Dialog.Header>
+
+						{@render create?.()}
+						
+					</Dialog.Content>
+				</Dialog.Root>
+			</Sidebar.GroupLabel>
 			<Sidebar.GroupContent>
 				<Sidebar.Menu>
-					{#each acceptData as item}
+					{#each friends as item}
 						<Sidebar.MenuItem>
 							<Sidebar.MenuButton class="py-8">
 								{#snippet child({ props })}
 									<a href={`/chat/${item.uuid}`} {...props}>
 										<img src={profile10} alt="" class="h-[47px] w-[47px]" />
-										<span class="text-lg">{item.name}</span>
+										<span class="text-lg"
+											>{item.role === 'received' ? item.name_from : item.name_to}</span
+										>
 									</a>
 								{/snippet}
 							</Sidebar.MenuButton>
@@ -41,26 +59,37 @@
 			</Sidebar.GroupContent>
 		</Sidebar.Group>
 
-		{#if pendingData.find((f: {status: string})=> f.status === "pending")}
+		{#if friendPending != null}
 			<Sidebar.Group>
-			<Sidebar.GroupLabel>Message Pending</Sidebar.GroupLabel>
-			<Sidebar.GroupContent>
-				<Sidebar.Menu>
-					{#each pendingData as item}
-						<Sidebar.MenuItem>
-							<Sidebar.MenuButton class="py-8">
-								{#snippet child({ props })}
-									<a href={`/chat/${item.uuid}`} {...props}>
-										<img src={profile10} alt="" class="h-[47px] w-[47px]" />
-										<span class="text-lg">{item.name}</span>
-									</a>
-								{/snippet}
-							</Sidebar.MenuButton>
-						</Sidebar.MenuItem>
-					{/each}
-				</Sidebar.Menu>
-			</Sidebar.GroupContent>
-		</Sidebar.Group>
+				<Sidebar.GroupLabel>Message Pending</Sidebar.GroupLabel>
+				<Sidebar.GroupContent>
+					<Sidebar.Menu>
+						{#each friendPending as item}
+							<Sidebar.MenuItem>
+								<Sidebar.MenuButton class="py-8">
+									{#snippet child({ props })}
+										<a href={`/chat/${item.uuid}`} {...props}>
+											<img src={profile10} alt="" class="h-[47px] w-[47px]" />
+											<span class="text-lg"
+												>{item.role === 'received'
+													? item.name_from !== ''
+														? item.name_from
+														: '~' + item.uuid
+													: item.name_to !== ''
+														? item.name_to
+														: '~' + item.uuid}</span
+											>
+										</a>
+
+										
+									
+									{/snippet}
+								</Sidebar.MenuButton>
+							</Sidebar.MenuItem>
+						{/each}
+					</Sidebar.Menu>
+				</Sidebar.GroupContent>
+			</Sidebar.Group>
 		{/if}
 	</Sidebar.Content>
 
@@ -75,7 +104,7 @@
 								class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground text-md py-8 font-bold"
 							>
 								<img src={profile23} alt="" class="mr-2 h-[47px] w-[47px]" />
-								{data.data.username}
+								{profile.data.username}
 								<ChevronUp class="ml-auto" />
 							</Sidebar.MenuButton>
 						{/snippet}

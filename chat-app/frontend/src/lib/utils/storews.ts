@@ -3,20 +3,23 @@ import { writable } from 'svelte/store';
 const messageStore = writable('');
 let socket:WebSocket | null= null;
 
+// ws://localhost:3000/ws/chat?token=${token}&toUser=${uuid}
 function ConnectWebSocket(token: any,uuid: any) {
+	let conn = uuid === '' || uuid === null ? `ws://localhost:3000/ws/chat?token=${token}` : `ws://localhost:3000/ws/chat?token=${token}&toUser=${uuid}`
+
 	if (socket) {
 		socket.onclose = () => {
-			openNewSocket(token, uuid);
+			openNewSocket(conn);
 		};
 		socket.close();
 	} else {
-		openNewSocket(token, uuid);
+		openNewSocket(conn);
 	}
 }
 
 
-function openNewSocket(token: any,uuid: any) {	
-	socket = new WebSocket(`ws://localhost:3000/ws/chat?token=${token}&toUser=${uuid}`);
+function openNewSocket(conn_url: any) {	
+	socket = new WebSocket(conn_url);
 
 	socket.addEventListener('open', function (event) {
 		console.log("it's Open");

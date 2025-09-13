@@ -1,13 +1,11 @@
 package response
 
 import (
-	// "github.com/Zyprush18/deeepen-golang/chat-app/backend/src/database"
 	"github.com/Zyprush18/deeepen-golang/chat-app/backend/src/database"
-	"gorm.io/gorm"
 )
 
 type Auth struct {
-	gorm.Model
+	database.User
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Password string `json:"password"`

@@ -1,4 +1,4 @@
-import { getData } from '$lib/utils/profile.js';
+import { getDataFriends, getDataProfile } from '$lib/utils/profile.js';
 import { redirect } from '@sveltejs/kit';
 
 
@@ -10,7 +10,8 @@ export async function load({ cookies,params,depends }) {
         throw redirect(302, '/login');
     }
 
-    const profile = await getData(auth);
+    const profile = await getDataProfile(auth);
+    const friends = await getDataFriends(auth);
     
     if (profile.status != 200) {	
         cookies.delete("auth", {path:"/chat"});
@@ -19,14 +20,7 @@ export async function load({ cookies,params,depends }) {
     }
     depends(slug);
 
-    
-	// console.log(prop.name.data.friend);
-	
-	// let name = $state("")
-	// nameFriend.forEach((v: friend) => {
-	// 	name = v.name 
-	// });
-	// $inspect(data,nameFriend,name)
 
-    return {Auth: auth, Profile: profile,Slug: slug}
+
+    return {Auth: auth, Profile: profile,Slug: slug, Friend: friends }
 }
